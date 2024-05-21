@@ -14,7 +14,7 @@ This project was completed as part of my Environmental Science capstone course. 
     -	Precip_2010_2019.csv
     -	Precip_2020_present.csv
 
-- LTERscript.Rmd: R markdown file with R script for data cleaning to get only the lakes of interest in our project (Riley chain, Phalen chain, MPRB chain, Lino Lakes chain)\
+- LTERscript.Rmd: R markdown file with R script for data cleaning to get only the lakes of interest in our project (Riley chain, Phalen chain, MPRB chain, Lino Lakes chain)
 
 - LTER_Summarize_1.R: R script for calculating summary statistics
 
