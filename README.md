@@ -7,12 +7,12 @@ This project was completed as part of my Environmental Science capstone course. 
 
 - LakeChains.csv: csv file that categorizes lakes by the lake chain they belong to and their order in the chain
 
-Precipitation data for the TCMA as collected by the MSP airport:
--	Precip_1980_1990.csv
--	Precip_1990_1999.csv
--	Precip_2000_2009.csv
--	Precip_2010_2019.csv
--	Precip_2020_present.csv
+- Precipitation data for the TCMA as collected by the MSP airport:
+    -	Precip_1980_1990.csv
+    -	Precip_1990_1999.csv
+    -	Precip_2000_2009.csv
+    -	Precip_2010_2019.csv
+    -	Precip_2020_present.csv
 
 - LTERscript.Rmd: R markdown file with R script for data cleaning to get only the lakes of interest in our project (Riley chain, Phalen chain, MPRB chain, Lino Lakes chain)\
 
