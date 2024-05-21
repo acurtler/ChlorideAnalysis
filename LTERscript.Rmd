@@ -1,0 +1,189 @@
+---
+title: "LTER Chloride"
+output: html_document
+date: "2024-03-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#  install packages 
+install.packages("dplyr") 
+install.packages("babynames")
+install.packages("stringr")
+install.packages("ggplot2")
+install.packages("lubridate")
+install.packages("zoo")
+install.packages("dygraphs")
+
+# load packages into workspace 
+library(dplyr)
+library(babynames)
+library(stringr)
+library(ggplot2)
+library(lubridate)
+library(zoo)
+library(dygraphs)
+```
+
+## R Markdown
+
+```{r}
+lakedata <- read.csv("Cl_all_lakes.csv", header = TRUE) %>%
+  mutate(sampleDate = as.Date(sampleDate)) %>%
+  mutate(DOW = as.character(DOW)) %>% 
+  mutate(DOW = if_else(str_detect(DOW, "^20"), # find those DOWs that start with a 2 (Anoka County)
+                       str_pad(DOW, width = 8, side = "left", pad = "0"),  # add leading zeroes to get it to 8 digits
+                       as.character(DOW))) 
+
+
+
+# other tips
+# in R, or excel, make a list of lakes that use
+lakelist <- read.csv("LakeChains.csv", header = TRUE) %>%
+mutate(DOW = as.character(DOW)) %>% 
+  mutate(DOW = if_else(str_detect(DOW, "^20"), # find those DOWs that start with a 2 (Anoka County)
+                       str_pad(DOW, width = 8, side = "left", pad = "0"),  # add leading zeroes to get it to 8 digits
+                       as.character(DOW))) 
+
+# use that list to filter your data
+selectedlakes <- lakedata %>%
+  dplyr::filter(DOW %in% lakelist$DOW)
+
+```
+
+```{r}
+selectedlakes <- left_join(selectedlakes, lakelist)
+```
+
+
+#clean data
+```{r}
+PhalenLakes <- selectedlakes %>%
+  dplyr:: filter(DOW %in% c("62004000", "62000600", "62000700", "62001002", "62001200", "62001300"))
+
+LinoLakes <- selectedlakes %>%
+  dplyr::filter(DOW %in% c("02000400", "02000500", "02000700", "02000800", "02001300", "62006702"))
+
+MPRBLakes <- selectedlakes %>%
+  dplyr::filter(DOW %in% c("27003800", "27003900", "27004000", "27003100", "27001600", "27001800"))
+
+RileyLakes <- selectedlakes %>%
+  dplyr::filter(DOW %in% c("10000700", "10001200", "10001300", "10000100", "10000200", "62007400"))
+```
+
+#create lake objects
+#Phalen chain of lakes
+```{r}
+KOHLMAN <- PhalenLakes %>%
+  dplyr::filter(LAKENAME == "KOHLMAN")
+
+WILLOW <- PhalenLakes %>%
+  dplyr::filter(LAKENAME == "WILLOW")
+
+GERVAIS <- PhalenLakes %>%
+  dplyr::filter(LAKENAME == "GERVAIS")
+
+ROUND <- PhalenLakes %>%
+  dplyr::filter(LAKENAME == "ROUND")
+
+PHALEN <- PhalenLakes %>%
+  dplyr::filter(LAKENAME == "PHALEN")
+```
+
+#Lino Lakes chain of lakes
+```{r}
+PELTIER <- LinoLakes %>%
+  dplyr::filter(LAKENAME == "PELTIER")
+
+GEORGEWATCH <- LinoLakes %>%
+  dplyr::filter(LAKENAME == "GEORGE WATCH")
+
+MARSHAN <- LinoLakes %>%
+  dplyr::filter(LAKENAME == "MARSHAN")
+
+RICE <- LinoLakes %>%
+  dplyr::filter(LAKENAME == "RICE")
+
+BALDWIN <- LinoLakes %>%
+  dplyr::filter(LAKENAME == "BALDWIN")
+
+LONG <- LinoLakes %>%
+  dplyr::filter(DOW == 62006702)
+```
+
+#Riley chain of lakes
+```{r}
+LUCY <- RileyLakes %>%
+  dplyr::filter(LAKENAME == "LUCY")
+
+ANN <- RileyLakes %>%
+  dplyr::filter(LAKENAME == "ANN")
+
+SUSAN <- RileyLakes %>%
+  dplyr::filter(LAKENAME == "SUSAN")
+
+RICEMARSH <- RileyLakes %>%
+  dplyr::filter(LAKENAME == "RICE MARSH")
+
+RILEY <- RileyLakes %>%
+  dplyr::filter(LAKENAME == "RILEY")
+
+GRASS <- RileyLakes %>%
+  dplyr::filter(LAKENAME == "GRASS")
+```
+
+#MPRB chain of lakes
+```{r}
+BROWNIE <- MPRBLakes %>%
+  dplyr::filter(LAKENAME == "BROWNIE")
+
+CEDAR <- MPRBLakes %>%
+  dplyr::filter(LAKENAME == "CEDAR")
+
+LAKEOFTHEISLES <- MPRBLakes %>%
+  dplyr::filter(LAKENAME == "LAKE OF THE ISLES")
+
+BDEMAKASKA <- MPRBLakes %>%
+  dplyr::filter(LAKENAME == "BDE MAKA SKA")
+
+HARRIET <- MPRBLakes %>%
+  dplyr::filter(LAKENAME == "HARRIET")
+
+HIAWATHA <- MPRBLakes %>%
+  dplyr::filter(LAKENAME == "HIAWATHA")
+```
+
+#ts for each lake
+```{r}
+Kohlman_ts <- zoo(KOHLMAN$Cl.mg_L, order.by = KOHLMAN$sampleDate, frequency = NULL)
+plot.zoo(Kohlman_ts)
+
+Willow_ts <- zoo(WILLOW$Cl.mg_L, order.by = WILLOW$sampleDate, frequency = NULL)
+plot.zoo(Willow_ts)
+
+Gervais_ts <- zoo(GERVAIS$Cl.mg_L, order.by = GERVAIS$sampleDate, frequency = NULL)
+plot.zoo(Gervais_ts)
+
+Round_ts <- zoo(ROUND$Cl.mg_L, order.by = ROUND$sampleDate, frequency = NULL)
+plot.zoo(Round_ts)
+
+Phalen_ts <- zoo(PHALEN$Cl.mg_L, order.by = PHALEN$sampleDate, frequency = NULL)
+plot.zoo(Phalen_ts)
+
+Long_ts <- zoo(LONG$Cl.mg_L, order.by = LONG$sampleDate, frequency = NULL)
+LongLake <- plot.zoo(Long_ts, main = "Long Lake", xlab = "Date", ylab = "[Cl] (mg/L)")
+
+Grass_ts <- zoo(GRASS$Cl.mg_L, order.by = GRASS$sampleDate, frequency = NULL)
+GrassLake <- plot.zoo(Grass_ts, main = "Grass Lake", xlab = "Date", ylab = "[Cl] (mg/L)")
+```
+
+```{r}
+Long_yearly <- aggregate(LongLake, as.numeric(format(index(LongLake), "%Y")), mean)
+plot(Long_yearly, main = "Long Lake Yearly Averages", xlab = "Year", ylab = "Average [Cl]", type = "p")
+
+Grass_yearly <- aggregate(GrassLake, as.numeric(format(index(GrassLake), "%Y")), mean)
+plot(Grass_yearly, main = "Grass Lake Yearly Averages", xlab = "Year", ylab = "Average [Cl]", type = "p")
+```
+
+
