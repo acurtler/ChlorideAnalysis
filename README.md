@@ -20,6 +20,8 @@ This project was completed as part of my Environmental Science capstone course. 
 
 - LTER_Plots.R: R script for creating some data plots
 
+- LTER Final Project Presentation.pdf: pdf file of the presentation of our findings
+
 
 ## How to Run This Project
 
